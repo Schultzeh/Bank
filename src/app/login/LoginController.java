@@ -17,7 +17,6 @@ public class LoginController {
     public TextField socialNumberInput;
     public TextField passwordInput;
     public Button loginButton;
-
     // Use this in other Controllers to get "the currently logged in user".
     private static User user = null;
     public static User getUser() { return user; }

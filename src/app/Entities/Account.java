@@ -1,10 +1,12 @@
 package app.Entities;
 
 import app.annotations.Column;
+import app.db.DB;
 
 public class Account {
+
     @Column("account_number")
-    private int accountNumber;
+    private long accountNumber;
     @Column("account_name")
     private String accountName;
     @Column
@@ -14,7 +16,7 @@ public class Account {
     @Column
     private float balance;
 
-    public int getAccountNumber() {
+    public long getAccountNumber() {
         return accountNumber;
     }
 

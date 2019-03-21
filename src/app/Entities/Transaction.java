@@ -9,13 +9,13 @@ import java.time.LocalDate;
 
 public class Transaction {
     @Column
-    private int id;
+    private long id;
     @Column
     private Timestamp date;
     @Column("from_account")
-    private int fromAccount;
+    private long fromAccount;
     @Column("to_account")
-    private int toAccount;
+    private long toAccount;
     @Column
     private float amount;
     @Column
