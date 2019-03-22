@@ -2,7 +2,9 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -58,7 +60,18 @@
           </TitledPane>
           <TitledPane fx:id="newTransaction" animated="false" text="Ny överföring">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="419.0" prefWidth="216.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="419.0" prefWidth="216.0">
+                     <children>
+                        <Label layoutX="23.0" layoutY="28.0" text="Från konto" />
+                        <Label layoutX="21.0" layoutY="80.0" text="Till konto" />
+                        <Label layoutX="29.0" layoutY="165.0" text="Belopp" />
+                        <Label layoutX="29.0" layoutY="225.0" text="Meddelande" />
+                        <TextField fx:id="transactionFromAccount" layoutX="23.0" layoutY="49.0" />
+                        <TextField fx:id="transactionToAcc" layoutX="23.0" layoutY="101.0" />
+                        <TextField fx:id="transactionAmount" layoutX="23.0" layoutY="189.0" />
+                        <TextField fx:id="transactionMessage" layoutX="23.0" layoutY="246.0" />
+                        <Button fx:id="transactionSend" layoutX="84.0" layoutY="294.0" mnemonicParsing="false" onAction="#makeTransaction" text="Skicka" />
+                     </children></AnchorPane>
             </content>
           </TitledPane>
           <TitledPane animated="false" text="untitled 3">

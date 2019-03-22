@@ -4,6 +4,7 @@ package app.account;
 import app.Entities.Account;
 import app.Entities.Transaction;
 import app.db.DB;
+import app.transaction.TransactionController;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -19,51 +20,42 @@ import java.util.List;
 public class AccountController {
 
     Account account;
-    private Object Transaction;
+//    private Transaction Transaction;
 
-    @FXML
-    VBox transactionBox;
+    @FXML VBox transactionBox;
 
     @FXML
     private void initialize(){
         System.out.println("initialize account");
-        Platform.runLater(() -> generateTransactions());
+        Platform.runLater(this::loadMoreTransactions);
 //        loadMoreTransactions();
     }
 
+    public void setAccount(long number){
+        account = DB.getAccount(number);
+    }
+
     void loadMoreTransactions(){
-//        List<Transaction> transactions = DB.getTransactions(accountId);
-        displayTransaction(/*transactions*/);
+        List<Transaction> transactions = DB.getTransactions(account.getAccountNumber());
+        displayTransaction(transactions);
     }
 
-    void generateTransactions(){
-        List<Transaction> transactions = (List<Transaction>) DB.getTransactions(account.getAccountNumber());
-        transactions.forEach(transaction -> {
-            Transaction = transaction;
-            Label transactionLabel = new Label("" + Transaction.toString());
-            transactionLabel.setMinSize(500, 40);
-            transactionBox.getChildren().add(transactionLabel);
-        });
-    }
-
-    void displayTransaction(/*List<Transaction> transactions*/){
+    void displayTransaction(List<Transaction> transactions){
         // For every transaction, do the following:
+        for (Transaction transaction : transactions)
         try {
             FXMLLoader loader = new FXMLLoader( getClass().getResource( "/app/transaction/transaction.fxml" ) );
             Parent fxmlInstance = loader.load();
             Scene scene = new Scene( fxmlInstance );
 
-//            TransactionController controller = loader.getController();
-//            controller.setTransaction(transaction);
+            TransactionController controller = loader.getController();
+            System.out.println(transaction);
+            controller.setTransaction(transaction);
 
             transactionBox.getChildren().add(scene.getRoot());
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setAccount(long number){
-        account = DB.getAccount(number);
     }
 
     @FXML void clickLoadTransactions(Event e) { loadMoreTransactions(); }

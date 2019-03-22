@@ -5,6 +5,7 @@ import app.annotations.Column;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 public class Transaction {
@@ -32,6 +33,10 @@ public class Transaction {
 
     public long getFromAccount() {
         return fromAccount;
+    }
+
+    public long getToAccount() {
+        return toAccount;
     }
 
     public float getAmount() {

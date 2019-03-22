@@ -10,10 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -24,16 +21,16 @@ import java.util.List;
 
 public class HomeController {
 
-    @FXML
-    Label nameLabel;
-    @FXML
-    BorderPane pane;
-    @FXML
-    VBox accountsBox;
-    @FXML
-    VBox accountOverview;
-    @FXML
-    TitledPane newTransaction;
+    @FXML Label nameLabel;
+    @FXML BorderPane pane;
+    @FXML VBox accountsBox;
+    @FXML VBox accountOverview;
+    @FXML TitledPane newTransaction;
+    @FXML TextField transactionFromAccount;
+    @FXML TextField transactionToAcc;
+    @FXML TextField transactionMessage;
+    @FXML TextField transactionAmount;
+    @FXML Button transactionSend;
 
     private Object Account;
 
@@ -63,6 +60,15 @@ public class HomeController {
                 }
             });
         });
+    }
+
+    @FXML
+    void makeTransaction(){
+        String message = transactionMessage.getText();
+        long fromAccount = Long.parseLong(transactionFromAccount.getText());
+        long toAccount = Long.parseLong(transactionToAcc.getText());
+        float amount = Long.parseLong(transactionAmount.getText());
+        DB.makeTransaction(fromAccount, toAccount, amount, message);
     }
 
     @FXML

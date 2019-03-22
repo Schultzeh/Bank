@@ -17,6 +17,9 @@ public class Database {
     private Connection conn = null;
     private HashMap<String, PreparedStatement> preparedStatements = new HashMap<>();
 
+    public Connection getConn() {
+        return conn;
+    }
 
     /** Returns a cached PreparedStatement if possible, else caches it for future use */
     public PreparedStatement prepareStatement(String SQLQuery){
