@@ -22,9 +22,21 @@ public class Transaction {
     private String message;
 
 
-    public String getMessage() { return message; }
-    public float getAmount() { return amount; }
-    public Timestamp getDate() { return date; }
+    public String getMessage() {
+        return message;
+    }
+
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public long getFromAccount() {
+        return fromAccount;
+    }
+
+    public float getAmount() {
+        return amount;
+    }
 
     @Override
     public String toString() {

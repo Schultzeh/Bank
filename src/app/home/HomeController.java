@@ -32,6 +32,9 @@ public class HomeController {
     VBox accountsBox;
     @FXML
     VBox accountOverview;
+    @FXML
+    TitledPane newTransaction;
+
     private Object Account;
 
     List<Account> userAccounts = null;

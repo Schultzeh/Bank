@@ -10,6 +10,7 @@ public class TransactionController {
     @FXML Label message;
     @FXML Label amount;
     @FXML Label date;
+    @FXML Label fromAccount;
 
     @FXML
     private void initialize(){
@@ -18,7 +19,8 @@ public class TransactionController {
 
     public void setTransaction(Transaction transaction) {
         message.setText(transaction.getMessage());
-        // etc
-        // etc
+        date.setText("" + transaction.getDate());
+        amount.setText("" + transaction.getAmount());
+        fromAccount.setText("" + transaction.getFromAccount());
     }
 }
