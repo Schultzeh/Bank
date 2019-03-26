@@ -20,7 +20,7 @@ public class Transaction {
     @Column
     private float amount;
     @Column
-    private String message;
+    private String message = null;
 
 
     public String getMessage() {

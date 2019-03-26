@@ -61,7 +61,7 @@ public abstract class DB {
     public static List<Transaction> getTransactions(long accountId, int offset){ return getTransactions(accountId, offset, offset + 10); }
     public static List<Transaction> getTransactions(long accountId, int offset, int limit){
         List<Transaction> result = null;
-        PreparedStatement ps = prep("SELECT * from transaction WHERE from_account = ? OR to_account = ? LIMIT ? OFFSET ?");
+        PreparedStatement ps = prep("SELECT * from transaction WHERE from_account = ? OR to_account = ? ORDER BY date DESC LIMIT ? OFFSET ?");
         try {
             ps.setLong(1, accountId);
             ps.setLong(2,accountId);
@@ -82,6 +82,41 @@ public abstract class DB {
             cstmt.setString(4,message);
             cstmt.executeUpdate();
         }   catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void createAccount(String accountName, String accountOwner){
+        CallableStatement cstmt;
+        try{
+            cstmt = Database.getInstance().getConn().prepareCall("{call create_account(?,?)}");
+            cstmt.setString(1, accountName);
+            cstmt.setString(2, accountOwner);
+            cstmt.executeUpdate();
+        }   catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteAccount(long accountNumber){
+        CallableStatement cstmt;
+        try{
+            cstmt = Database.getInstance().getConn().prepareCall("{call delete_account(?)}");
+            cstmt.setLong(1, accountNumber);
+            cstmt.executeUpdate();
+        }   catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void renameAccount(String accountName, long accountNumber){
+        CallableStatement cstmt;
+        try{
+            cstmt = Database.getInstance().getConn().prepareCall("{call rename_account(?,?)}");
+            cstmt.setString(1, accountName);
+            cstmt.setLong(2, accountNumber);
+            cstmt.executeUpdate();
+        }   catch (SQLException e){
             e.printStackTrace();
         }
     }

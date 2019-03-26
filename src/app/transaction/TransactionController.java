@@ -8,6 +8,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.PopupWindow;
 import javafx.util.Duration;
+import java.time.format.DateTimeFormatter;
 
 public class TransactionController {
 
@@ -23,18 +24,25 @@ public class TransactionController {
         System.out.println("initialize transaction");
     }
 
-    public void setTransaction(Transaction transaction) {
-        date.setText("" + transaction.getDate());
+    public void setTransaction(Transaction transaction, long number) {
+        date.setText("" + transaction.getDate().toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         amount.setText("" + transaction.getAmount());
         messageImage.setVisible(false);
-        if(transaction.getMessage() != null) {
+        toOrFrom.setText(""+ transaction.getFromAccount());
+        styleTransaction(transaction, number);
+    }
+
+    void styleTransaction(Transaction transaction, long number){
+        if(!transaction.getMessage().isEmpty()){
             Tooltip tt = new Tooltip(transaction.getMessage());
             tt.setShowDelay(Duration.seconds(0.1));
             tt.setAnchorLocation(PopupWindow.AnchorLocation.CONTENT_TOP_RIGHT);
             messageImage.setVisible(true);
             message.setTooltip(tt);
-
         }
-        toOrFrom.setText(""+ transaction.getFromAccount());
+        if(transaction.getFromAccount() == number){
+            amount.setText("-" + transaction.getAmount());
+            toOrFrom.setText("" + transaction.getToAccount());
+        }
     }
 }

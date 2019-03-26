@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
@@ -22,22 +23,40 @@ public class AccountController {
     Account account;
 //    private Transaction Transaction;
 
-    @FXML VBox transactionBox;
+    @FXML public VBox transactionBox;
+    @FXML Button loadAllTransactionsBtn;
+    @FXML Label accountNameHeadline;
+    @FXML Label accountNumberHeadline;
+    @FXML Label accountBalanceHeadline;
 
     @FXML
     private void initialize(){
         System.out.println("initialize account");
-        Platform.runLater(this::loadMoreTransactions);
-//        loadMoreTransactions();
+        Platform.runLater(this::loadTransactions);
     }
 
     public void setAccount(long number){
         account = DB.getAccount(number);
     }
 
-    void loadMoreTransactions(){
+    void loadTransactions(){
         List<Transaction> transactions = DB.getTransactions(account.getAccountNumber());
+        accountNameHeadline.setText(account.getAccountName());
+        accountNumberHeadline.setText("" + account.getAccountNumber());
+        accountBalanceHeadline.setText("" + account.getBalance());
         displayTransaction(transactions);
+    }
+
+    @FXML
+    public void reloadTransactions(){
+        transactionBox.getChildren().clear();
+        loadTransactions();
+    }
+
+    void loadMoreTransactions(){
+        List<Transaction> transactions = DB.getTransactions(account.getAccountNumber(), 10);
+        displayTransaction(transactions);
+        loadAllTransactionsBtn.setVisible(false);
     }
 
     void displayTransaction(List<Transaction> transactions){
@@ -50,7 +69,7 @@ public class AccountController {
 
             TransactionController controller = loader.getController();
             System.out.println(transaction);
-            controller.setTransaction(transaction);
+            controller.setTransaction(transaction, account.getAccountNumber());
 
             transactionBox.getChildren().add(scene.getRoot());
         } catch (IOException e) {
