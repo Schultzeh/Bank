@@ -19,6 +19,8 @@ public class Transaction {
     private long toAccount;
     @Column
     private float amount;
+    @Column("account_name")
+    private String accountName;
     @Column
     private String message = null;
 

@@ -34,7 +34,7 @@ public class HomeController {
     @FXML TextField newAccountNameInput;
     @FXML Button createNewAccount;
 
-    private Object Account;
+    Account account;
 
     List<Account> userAccounts = null;
 
@@ -43,6 +43,7 @@ public class HomeController {
         nameLabel.setText(LoginController.getUser().getFirstName());
         generateAccounts();
         generateChoiceBox();
+        System.out.println(DB.getFiveLatestTransactions(LoginController.getUser().getSocialNumber()));
     }
 
     @FXML
@@ -50,7 +51,6 @@ public class HomeController {
 
         userAccounts = (List<Account>)DB.getAccounts(LoginController.getUser().getSocialNumber());
         userAccounts.forEach(account -> {
-            Account = account;
             HBox accountBox = new HBox();
             Label accountNameLabel = new Label(account.getAccountName());
             Label accountBalanceLabel = new Label("" + account.getBalance());
@@ -61,7 +61,6 @@ public class HomeController {
             setAccoutsLabel(accountNameLabel, accountBalanceLabel, trashcanImg, renameImg, accountDelete, accountRename);
             accountBox.getChildren().addAll(accountNameLabel, accountBalanceLabel, accountRename, accountDelete);
             accountOverview.getChildren().addAll(accountBox);
-            System.out.println(account.getAccountNumber());
             accountNameLabel.setOnMouseClicked(event -> {
                 try {
                     goToAccount(account.getAccountNumber());
@@ -100,11 +99,22 @@ public class HomeController {
         long toAccount = Long.parseLong(transactionToAcc.getText());
         float amount = Long.parseLong(transactionAmount.getText());
         DB.makeTransaction(fromAccount, toAccount, amount, message);
+        try {
+            goToAccount(fromAccount);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @FXML void makeCardTransaction(){
-        String message = "Kortköp";
-        
+        userAccounts = (List<Account>)DB.getAccounts(LoginController.getUser().getSocialNumber());
+        userAccounts.forEach(account -> {
+            if(account.getAccountType().equals("creditcard")){
+                Long fromAccount = account.getAccountNumber();
+                System.out.println(fromAccount);
+                DB.makeCardTransaction(fromAccount);
+            }
+        });
     }
 
     @FXML
@@ -194,5 +204,9 @@ public class HomeController {
         DB.renameAccount(accountName, accountNumber);
         accountOverview.getChildren().clear();
         generateAccounts();
+    }
+
+    @FXML void loadLatestTransactions(){
+        DB.getFiveLatestTransactions(LoginController.getUser().getSocialNumber());
     }
 }

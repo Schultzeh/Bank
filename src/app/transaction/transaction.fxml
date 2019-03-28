@@ -11,37 +11,38 @@
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="something" prefHeight="42.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.transaction.TransactionController">
-   <children>
-      <BorderPane />
-      <VBox alignment="CENTER" prefHeight="42.0" prefWidth="527.0">
-         <children>
-            <HBox alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="482.0">
-               <children>
-                  <Label fx:id="date" prefHeight="21.0" prefWidth="169.0" text="Date" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="21.0" prefWidth="546.0" spacing="130.0">
-               <children>
-                  <Label fx:id="toOrFrom" prefHeight="21.0" prefWidth="169.0" text="To or from" />
-                  <Label fx:id="amount" prefHeight="21.0" prefWidth="108.0" text="Amount" />
-                  <Label fx:id="message">
-                     <graphic>
-                        <ImageView fx:id="messageImage" fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@icons8-new-post-50.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-               </children>
-            </HBox>
-         </children>
-         <padding>
-            <Insets left="5.0" right="3.0" />
-         </padding>
-      </VBox>
-   </children>
-   <stylesheets>
-      <URL value="@transactionstyle.css" />
-   </stylesheets>
+    <children>
+        <BorderPane />
+        <VBox alignment="CENTER" prefHeight="42.0" prefWidth="527.0">
+            <children>
+                <HBox alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="488.0">
+                    <children>
+                        <Label fx:id="date" prefHeight="21.0" prefWidth="505.0" text="Date" />
+                        <Label fx:id="message">
+                            <graphic>
+                                <ImageView fx:id="messageImage" fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@icons8-new-post-50.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Label>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="21.0" prefWidth="546.0" spacing="50.0">
+                    <children>
+                        <Label fx:id="toAccount" prefHeight="21.0" prefWidth="228.0" text="To" />
+                        <Label fx:id="fromAccount" prefHeight="21.0" prefWidth="143.0" text="From" />
+                        <Label fx:id="amount" alignment="CENTER_RIGHT" prefHeight="21.0" prefWidth="108.0" text="Amount" />
+                    </children>
+                </HBox>
+            </children>
+            <padding>
+                <Insets left="5.0" right="3.0" />
+            </padding>
+        </VBox>
+    </children>
+    <stylesheets>
+        <URL value="@transactionstyle.css" />
+    </stylesheets>
 </AnchorPane>

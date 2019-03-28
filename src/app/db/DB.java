@@ -39,7 +39,7 @@ public abstract class DB {
         try{
             ps.setString(1, owner);
             accounts = new ObjectMapper<>(Account.class).map(ps.executeQuery());
-            } catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
         }
         return accounts;
@@ -70,6 +70,20 @@ public abstract class DB {
             result = (List<Transaction>)(List<?>)new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
         } catch (Exception e) { e.printStackTrace(); }
         return result; // return User;
+
+    }
+
+    public static List<Transaction> getFiveLatestTransactions(String accountId){
+        List<Transaction> result = null;
+        CallableStatement cstmt;
+        try{
+            cstmt = Database.getInstance().getConn().prepareCall("{call list_latest_five_transactions(?)}");
+            cstmt.setString(1, accountId);
+            result = (List<Transaction>) (List<?>)new ObjectMapper<>(Transaction.class).map(cstmt.executeQuery());
+        }   catch(SQLException e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static void makeTransaction(long fromAccount, long toAccount, float amount, String message){
@@ -80,7 +94,22 @@ public abstract class DB {
             cstmt.setLong(2,toAccount);
             cstmt.setFloat(3,amount);
             cstmt.setString(4,message);
-            cstmt.executeUpdate();
+            cstmt.execute();
+        }   catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void makeCardTransaction(long fromAccount){
+        System.out.println("röv " + fromAccount);
+        CallableStatement cstmt;
+        try{
+            cstmt = Database.getInstance().getConn().prepareCall("{call create_transaction(?,?,?,?)}");
+            cstmt.setLong(1,fromAccount);
+            cstmt.setLong(2, 64574453L);
+            cstmt.setFloat(3, 200.f);
+            cstmt.setString(4, "Kortköp");
+            cstmt.execute();
         }   catch(SQLException e){
             e.printStackTrace();
         }

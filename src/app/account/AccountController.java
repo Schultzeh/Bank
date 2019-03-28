@@ -1,6 +1,5 @@
 package app.account;
 
-
 import app.Entities.Account;
 import app.Entities.Transaction;
 import app.db.DB;
@@ -14,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -62,19 +60,17 @@ public class AccountController {
     void displayTransaction(List<Transaction> transactions){
         // For every transaction, do the following:
         for (Transaction transaction : transactions)
-        try {
-            FXMLLoader loader = new FXMLLoader( getClass().getResource( "/app/transaction/transaction.fxml" ) );
-            Parent fxmlInstance = loader.load();
-            Scene scene = new Scene( fxmlInstance );
-
-            TransactionController controller = loader.getController();
-            System.out.println(transaction);
-            controller.setTransaction(transaction, account.getAccountNumber());
-
-            transactionBox.getChildren().add(scene.getRoot());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            try {
+                FXMLLoader loader = new FXMLLoader( getClass().getResource( "/app/transaction/transaction.fxml" ) );
+                Parent fxmlInstance = loader.load();
+                Scene scene = new Scene( fxmlInstance );
+                System.out.println(transaction);
+                TransactionController controller = loader.getController();
+                controller.setTransaction(transaction, account.getAccountNumber());
+                transactionBox.getChildren().add(scene.getRoot());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 
     @FXML void clickLoadTransactions(Event e) { loadMoreTransactions(); }

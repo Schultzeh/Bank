@@ -15,20 +15,21 @@ public class TransactionController {
     @FXML Label message;
     @FXML Label amount;
     @FXML Label date;
-    @FXML Label toOrFrom;
+    @FXML Label toAccount;
+    @FXML Label fromAccount;
     @FXML ImageView messageImage;
 
 
     @FXML
     private void initialize(){
-        System.out.println("initialize transaction");
+//        System.out.println("initialize transaction");
     }
 
     public void setTransaction(Transaction transaction, long number) {
         date.setText("" + transaction.getDate().toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-        amount.setText("" + transaction.getAmount());
+        amount.setText(" " + transaction.getAmount());
         messageImage.setVisible(false);
-        toOrFrom.setText(""+ transaction.getFromAccount());
+        toAccount.setText("Till: "+ transaction.getFromAccount());
         styleTransaction(transaction, number);
     }
 
@@ -42,7 +43,7 @@ public class TransactionController {
         }
         if(transaction.getFromAccount() == number){
             amount.setText("-" + transaction.getAmount());
-            toOrFrom.setText("" + transaction.getToAccount());
+            amount.setStyle("-fx-text-fill: red;");
         }
     }
 }
