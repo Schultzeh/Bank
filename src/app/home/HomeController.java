@@ -1,14 +1,18 @@
 package app.home;
 
 import app.Entities.Account;
+import app.Entities.Transaction;
 import app.Main;
 import app.account.AccountController;
 import app.db.DB;
+import app.db.ValidationHelper;
 import app.login.LoginController;
+import app.transaction.TransactionController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -18,6 +22,8 @@ import javafx.scene.layout.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
+import static app.db.DB.getFiveLatestTransactions;
 
 public class HomeController {
 
@@ -33,8 +39,9 @@ public class HomeController {
     @FXML ChoiceBox transactionFromList;
     @FXML TextField newAccountNameInput;
     @FXML Button createNewAccount;
+    @FXML Label totalBalance;
 
-    Account account;
+    Account account = new Account();
 
     List<Account> userAccounts = null;
 
@@ -43,7 +50,8 @@ public class HomeController {
         nameLabel.setText(LoginController.getUser().getFirstName());
         generateAccounts();
         generateChoiceBox();
-        System.out.println(DB.getFiveLatestTransactions(LoginController.getUser().getSocialNumber()));
+        loadLatestTransactions();
+        totalBalance.setText("" + DB.getTotalBalance(LoginController.getUser().getSocialNumber()));
     }
 
     @FXML
@@ -93,16 +101,18 @@ public class HomeController {
     }
 
     @FXML
-    void makeTransaction(){
+    void makeTransaction() {
         String message = transactionMessage.getText();
         long fromAccount = Long.parseLong(transactionFromList.getValue().toString());
         long toAccount = Long.parseLong(transactionToAcc.getText());
-        float amount = Long.parseLong(transactionAmount.getText());
-        DB.makeTransaction(fromAccount, toAccount, amount, message);
-        try {
-            goToAccount(fromAccount);
-        } catch (Exception e){
-            e.printStackTrace();
+        float amount = Float.parseFloat(transactionAmount.getText());
+        if (ValidationHelper.validateString(message)) {
+            DB.makeTransaction(fromAccount, toAccount, amount, message);
+            try {
+                goToAccount(fromAccount);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -111,7 +121,6 @@ public class HomeController {
         userAccounts.forEach(account -> {
             if(account.getAccountType().equals("creditcard")){
                 Long fromAccount = account.getAccountNumber();
-                System.out.println(fromAccount);
                 DB.makeCardTransaction(fromAccount);
             }
         });
@@ -121,7 +130,6 @@ public class HomeController {
     void generateChoiceBox(){
         userAccounts = (List<Account>)DB.getAccounts(LoginController.getUser().getSocialNumber());
         userAccounts.forEach(account -> {
-            System.out.println(account);
             transactionFromList.getItems().addAll(account.getAccountNumber());
         });
     }
@@ -169,8 +177,8 @@ public class HomeController {
         alert.setTitle("Radera konto?");
         alert.setHeaderText("Vill du verkligen radera " + accountName + "?");
 
-        ButtonType btnYes = new ButtonType("Yes");
-        ButtonType btnNo = new ButtonType("No");
+        ButtonType btnYes = new ButtonType("Ja");
+        ButtonType btnNo = new ButtonType("Nej");
 
         alert.getButtonTypes().setAll(btnYes, btnNo);
         Optional<ButtonType> result = alert.showAndWait();
@@ -178,8 +186,6 @@ public class HomeController {
         if (result.isPresent()) {
             if (result.get() == btnYes) {
                 deleteAccount(accountNumber);
-            } else if (result.get() == btnNo) {
-                System.out.println("User clicked No!");
             }
         }
     }
@@ -194,8 +200,9 @@ public class HomeController {
         Optional<String> result = dialog.showAndWait();
 
         if (result.isPresent()) {
+            if(ValidationHelper.validateName(dialog.getEditor().getText())){
             renameAccount(dialog.getEditor().getText(), accountNumber);
-            System.out.println(accountName + accountNumber);
+        }
         }
     }
 
@@ -207,6 +214,22 @@ public class HomeController {
     }
 
     @FXML void loadLatestTransactions(){
-        DB.getFiveLatestTransactions(LoginController.getUser().getSocialNumber());
+        List<Transaction> transactions =  DB.getFiveLatestTransactions(LoginController.getUser().getSocialNumber());
+        displayTransaction(transactions, account.getAccountName());
+    }
+
+    void displayTransaction(List<Transaction> transactions, String accountName){
+        //For every transaction, do the following:
+        for (Transaction transaction : transactions)
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource( "/app/transaction/transaction.fxml"));
+                Parent fxmlInstance = loader.load();
+                Scene scene = new Scene( fxmlInstance );
+                TransactionController controller = loader.getController();
+                controller.setTransaction(transaction, account.getAccountNumber(), accountName);
+                fiveTransactionsBox.getChildren().add(scene.getRoot());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 }

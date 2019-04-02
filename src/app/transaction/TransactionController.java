@@ -25,15 +25,16 @@ public class TransactionController {
 //        System.out.println("initialize transaction");
     }
 
-    public void setTransaction(Transaction transaction, long number) {
+    public void setTransaction(Transaction transaction, long number, String accountName) {
         date.setText("" + transaction.getDate().toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         amount.setText(" " + transaction.getAmount());
         messageImage.setVisible(false);
-        toAccount.setText("Till: "+ transaction.getFromAccount());
-        styleTransaction(transaction, number);
+        toAccount.setText("Till: "+ transaction.getToAccount());
+        fromAccount.setText("Från: "+ transaction.getFromAccount());
+        styleTransaction(transaction, number, accountName);
     }
 
-    void styleTransaction(Transaction transaction, long number){
+    void styleTransaction(Transaction transaction, long number, String accountName){
         if(!transaction.getMessage().isEmpty()){
             Tooltip tt = new Tooltip(transaction.getMessage());
             tt.setShowDelay(Duration.seconds(0.1));
@@ -42,8 +43,12 @@ public class TransactionController {
             message.setTooltip(tt);
         }
         if(transaction.getFromAccount() == number){
+            fromAccount.setText("Från: "+ accountName);
             amount.setText("-" + transaction.getAmount());
             amount.setStyle("-fx-text-fill: red;");
+        }
+        if (transaction.getToAccount() == number) {
+            toAccount.setText("Till: " + accountName);
         }
     }
 }

@@ -101,7 +101,6 @@ public abstract class DB {
     }
 
     public static void makeCardTransaction(long fromAccount){
-        System.out.println("röv " + fromAccount);
         CallableStatement cstmt;
         try{
             cstmt = Database.getInstance().getConn().prepareCall("{call create_transaction(?,?,?,?)}");
@@ -150,6 +149,18 @@ public abstract class DB {
         }
     }
 
-
-
+    public static float getTotalBalance(String socialNumber){
+        PreparedStatement ps = prep("SELECT SUM(`balance`) FROM `account` WHERE `owner` = ?");
+        float result = 0;
+        try {
+            ps.setString(1, socialNumber);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                result = rs.getFloat(1);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

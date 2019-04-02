@@ -24,14 +24,14 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </BorderPane.margin>
             <children>
-                <VBox fx:id="fiveTransactionsBox" alignment="CENTER" layoutY="30.0" maxHeight="469.0" prefHeight="439.0" prefWidth="541.0" style="-fx-background-color: lightgrey;">
+                <VBox fx:id="fiveTransactionsBox" layoutY="30.0" maxHeight="469.0" prefHeight="439.0" prefWidth="541.0" spacing="5.0">
                     <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </padding>
                 </VBox>
                 <HBox prefHeight="24.0" prefWidth="546.0">
                     <children>
-                        <Label fx:id="latestFiveTransactions" prefHeight="0.0" prefWidth="206.0" text="Senaste 5 transaktioner">
+                        <Label fx:id="latestFiveTransactions" prefHeight="30.0" prefWidth="301.0" text="Senaste 5 transaktioner">
                             <font>
                                 <Font size="20.0" />
                             </font>
@@ -110,7 +110,7 @@
                             <children>
                                 <Label layoutX="14.0" layoutY="14.0" text="Namn på kontot" />
                                 <TextField fx:id="newAccountNameInput" layoutX="14.0" layoutY="35.0" />
-                                <Button fx:id="createNewAccount" layoutX="14.0" layoutY="73.0" mnemonicParsing="false" onAction="#createAccount" text="Button" />
+                                <Button fx:id="createNewAccount" layoutX="14.0" layoutY="73.0" mnemonicParsing="false" onAction="#createAccount" text="Skapa konto" />
                             </children></AnchorPane>
                     </content>
                 </TitledPane>

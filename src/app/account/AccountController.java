@@ -42,7 +42,7 @@ public class AccountController {
         accountNameHeadline.setText(account.getAccountName());
         accountNumberHeadline.setText("" + account.getAccountNumber());
         accountBalanceHeadline.setText("" + account.getBalance());
-        displayTransaction(transactions);
+        displayTransaction(transactions, account.getAccountName());
     }
 
     @FXML
@@ -53,20 +53,19 @@ public class AccountController {
 
     void loadMoreTransactions(){
         List<Transaction> transactions = DB.getTransactions(account.getAccountNumber(), 10);
-        displayTransaction(transactions);
+        displayTransaction(transactions, account.getAccountName());
         loadAllTransactionsBtn.setVisible(false);
     }
 
-    void displayTransaction(List<Transaction> transactions){
+    void displayTransaction(List<Transaction> transactions, String accountName){
         // For every transaction, do the following:
         for (Transaction transaction : transactions)
             try {
                 FXMLLoader loader = new FXMLLoader( getClass().getResource( "/app/transaction/transaction.fxml" ) );
                 Parent fxmlInstance = loader.load();
                 Scene scene = new Scene( fxmlInstance );
-                System.out.println(transaction);
                 TransactionController controller = loader.getController();
-                controller.setTransaction(transaction, account.getAccountNumber());
+                controller.setTransaction(transaction, account.getAccountNumber(), accountName);
                 transactionBox.getChildren().add(scene.getRoot());
             } catch (IOException e) {
                 e.printStackTrace();
