@@ -76,7 +76,7 @@ public class HomeController {
                     e.printStackTrace();
                 }
             });
-            accountDelete.setOnMouseClicked(event -> deleteAccountPopup(account.getAccountNumber(), account.getAccountName()));
+            accountDelete.setOnMouseClicked(event -> deleteAccountPopup(account.getAccountNumber(), account.getAccountName(), account.getAccountType(), account.getBalance()));
             accountRename.setOnMouseClicked(event -> renameAccountPopup(account.getAccountNumber(), account.getAccountName()));
         });
     }
@@ -106,7 +106,8 @@ public class HomeController {
         long fromAccount = Long.parseLong(transactionFromList.getValue().toString());
         long toAccount = Long.parseLong(transactionToAcc.getText());
         float amount = Float.parseFloat(transactionAmount.getText());
-        if (ValidationHelper.validateString(message)) {
+        double balance = DB.getBalance(fromAccount);
+        if (ValidationHelper.validateString(message) && ValidationHelper.validateBalance(balance, amount) && ValidationHelper.validateAccountNumberExist(toAccount)) {
             DB.makeTransaction(fromAccount, toAccount, amount, message);
             try {
                 goToAccount(fromAccount);
@@ -129,6 +130,7 @@ public class HomeController {
     @FXML
     void generateChoiceBox(){
         userAccounts = (List<Account>)DB.getAccounts(LoginController.getUser().getSocialNumber());
+        transactionFromList.getItems().clear();
         userAccounts.forEach(account -> {
             transactionFromList.getItems().addAll(account.getAccountNumber());
         });
@@ -163,29 +165,34 @@ public class HomeController {
         DB.createAccount(accountName, accountOwner);
         accountOverview.getChildren().clear();
         generateAccounts();
+        generateChoiceBox();
     }
 
     @FXML
     void deleteAccount(long accountNumber){
         DB.deleteAccount(accountNumber);
         accountOverview.getChildren().clear();
+        transactionFromList.getItems().clear();
+        generateChoiceBox();
         generateAccounts();
     }
 
-    private void deleteAccountPopup(long accountNumber, String accountName) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Radera konto?");
-        alert.setHeaderText("Vill du verkligen radera " + accountName + "?");
+    private void deleteAccountPopup(long accountNumber, String accountName, String accountType, double balance) {
+            if(ValidationHelper.validateDeleteAccount(accountType, balance)){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Radera konto?");
+            alert.setHeaderText("Vill du verkligen radera " + accountName + "?");
 
-        ButtonType btnYes = new ButtonType("Ja");
-        ButtonType btnNo = new ButtonType("Nej");
+            ButtonType btnYes = new ButtonType("Ja");
+            ButtonType btnNo = new ButtonType("Nej");
 
-        alert.getButtonTypes().setAll(btnYes, btnNo);
-        Optional<ButtonType> result = alert.showAndWait();
+            alert.getButtonTypes().setAll(btnYes, btnNo);
+            Optional<ButtonType> result = alert.showAndWait();
 
-        if (result.isPresent()) {
-            if (result.get() == btnYes) {
-                deleteAccount(accountNumber);
+            if (result.isPresent()) {
+                if (result.get() == btnYes) {
+                    deleteAccount(accountNumber);
+                }
             }
         }
     }

@@ -45,6 +45,17 @@ public abstract class DB {
         return accounts;
     }
 
+    public static List<?> getAllAccounts(){
+        List<?> accounts = null;
+        PreparedStatement ps = prep("SELECT account_number FROM account");
+        try{
+            accounts = new ObjectMapper<>(Account.class).map(ps.executeQuery());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return accounts;
+    }
+
     public static User getMatchingUser(String socialNumber, String password){
         User result = null;
         PreparedStatement ps = prep("SELECT * FROM user WHERE social_number = ? AND password = ?");
@@ -154,6 +165,21 @@ public abstract class DB {
         float result = 0;
         try {
             ps.setString(1, socialNumber);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                result = rs.getFloat(1);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static float getBalance(long socialNumber){
+        PreparedStatement ps = prep("SELECT balance FROM `account` WHERE `account_number` = ?");
+        float result = 0;
+        try {
+            ps.setLong(1, socialNumber);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
                 result = rs.getFloat(1);
